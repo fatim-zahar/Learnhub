@@ -1,0 +1,66 @@
+name: Publish Docker image
+
+on:
+  workflow_call:
+    inputs:
+      version:
+        required: false
+        type: string
+        default: latest
+
+jobs:
+  push_to_registry:
+    name: Docker Hub
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - dockerfile: ./Dockerfile
+            image: oboumediane/tutoring-app-php
+            name: index.docker.io/oboumediane/tutoring-app-php
+          - dockerfile: ./nginx.Dockerfile
+            image: oboumediane/tutoring-app-nginx
+            name: index.docker.io/oboumediane/tutoring-app-nginx
+
+    permissions:
+      packages: write
+      contents: read
+      attestations: write
+      id-token: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v5
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3.6.0
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v5.10.0
+        with:
+          images: ${{ matrix.image }}
+          tags: |
+            type=raw,value=${{ inputs.version }}
+            type=raw,value=latest
+
+      - name: Build and push Docker image
+        id: push
+        uses: docker/build-push-action@v6.18.0
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@v3
+        with:
+          subject-name: ${{ matrix.name }}
+          subject-digest: ${{ steps.push.outputs.digest }}
+          push-to-registry: true

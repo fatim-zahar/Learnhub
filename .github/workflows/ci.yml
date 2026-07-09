@@ -1,0 +1,28 @@
+name: 'Development Pipeline'
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  tests:
+    uses: ./.github/workflows/tests.yml
+
+  lint:
+    uses: ./.github/workflows/lint.yml
+
+  sonar:
+    uses: ./.github/workflows/sonarcloud.yml
+    secrets: inherit
+
+  push-docker-image:
+    needs: [tests, lint, sonar]
+    uses: ./.github/workflows/push-image.yml
+    secrets: inherit
+
+  deploy:
+    needs: [push-docker-image]
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit
