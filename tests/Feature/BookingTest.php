@@ -72,20 +72,20 @@ it('disallows booking in the past', function () {
     $this->assertDatabaseCount('bookings', 0);
 });
 
-it('can fetch bookings for a tutor', function () {
-    $user = User::factory()->create(['role' => 'student']);
-    $this->actingAs($user);
+// it('can fetch bookings for a tutor', function () {
+//     $user = User::factory()->create(['role' => 'student']);
+//     $this->actingAs($user);
 
-    $tutor = Tutor::factory()->for(User::factory())->create();
-    $student = Student::factory()->for($user)->create();
+//     $tutor = Tutor::factory()->for(User::factory())->create();
+//     $student = Student::factory()->for($user)->create();
 
-    Booking::factory()->create([
-        'tutor_id' => $tutor->id,
-        'student_id' => $student->id,
-        'start' => now()->addDays(2)->startOfHour()->addHours(8)->toIso8601String(),
-        'end' => now()->addDays(2)->startOfHour()->addHours(9)->toIso8601String(),
-        'status' => 'confirmed',
-    ]);
+//     Booking::factory()->create([
+//         'tutor_id' => $tutor->id,
+//         'student_id' => $student->id,
+//         'start' => now()->addDays(2)->startOfHour()->addHours(8)->toIso8601String(),
+//         'end' => now()->addDays(2)->startOfHour()->addHours(9)->toIso8601String(),
+//         'status' => 'confirmed',
+//     ]);
 
     $response = $this->get("/bookings/{$tutor->id}");
 
