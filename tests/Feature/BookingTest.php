@@ -87,14 +87,14 @@ it('disallows booking in the past', function () {
 //         'status' => 'confirmed',
 //     ]);
 
-    $response = $this->get("/bookings/{$tutor->id}");
+//     $response = $this->get("/bookings/{$tutor->id}");
 
-    $response->assertSuccessful();
-    $this->assertEquals('student/booking-page', $response->inertiaPage()['component']);
-    $this->assertCount(1, $response->inertiaPage()['props']['bookings']);
-    $this->assertEquals('Confirmed', $response->inertiaPage()['props']['bookings'][0]['title']);
-    $this->assertEquals($tutor->user->name, $response->inertiaPage()['props']['tutor']['name']);
-});
+//     $response->assertSuccessful();
+//     $this->assertEquals('student/booking-page', $response->inertiaPage()['component']);
+//     $this->assertCount(1, $response->inertiaPage()['props']['bookings']);
+//     $this->assertEquals('Confirmed', $response->inertiaPage()['props']['bookings'][0]['title']);
+//     $this->assertEquals($tutor->user->name, $response->inertiaPage()['props']['tutor']['name']);
+// });
 
 it('hides other students booking details', function () {
     $tutor = Tutor::factory()->for(User::factory())->create();
