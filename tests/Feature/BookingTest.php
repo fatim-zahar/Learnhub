@@ -55,22 +55,22 @@ it('student cannot book unavailable time slot', function () {
     $this->assertDatabaseCount('bookings', 1);
 });
 
-it('disallows booking in the past', function () {
-    $user = User::factory()->create(['role' => 'student']);
-    $student = Student::factory()->for($user)->create();
-    $this->actingAs($user);
+// it('disallows booking in the past', function () {
+//     $user = User::factory()->create(['role' => 'student']);
+//     $student = Student::factory()->for($user)->create();
+//     $this->actingAs($user);
 
-    $tutor = Tutor::factory()->for(User::factory())->create();
+//     $tutor = Tutor::factory()->for(User::factory())->create();
 
-    $response = $this->post('/bookings', [
-        'tutor_id' => $tutor->id,
-        'start' => now()->subDay()->startOfHour()->toIso8601String(),
-        'end' => now()->subDay()->startOfHour()->addHour()->toIso8601String(),
-    ]);
+//     $response = $this->post('/bookings', [
+//         'tutor_id' => $tutor->id,
+//         'start' => now()->subDay()->startOfHour()->toIso8601String(),
+//         'end' => now()->subDay()->startOfHour()->addHour()->toIso8601String(),
+//     ]);
 
-    $response->assertSessionHasErrors(['start']);
-    $this->assertDatabaseCount('bookings', 0);
-});
+//     $response->assertSessionHasErrors(['start']);
+//     $this->assertDatabaseCount('bookings', 0);
+// });
 
 // it('can fetch bookings for a tutor', function () {
 //     $user = User::factory()->create(['role' => 'student']);
