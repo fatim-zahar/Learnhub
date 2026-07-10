@@ -17,6 +17,11 @@ jobs:
 
   push-docker-image:
     needs: [tests, lint]
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
     uses: ./.github/workflows/push-image.yml
     secrets: inherit
 
