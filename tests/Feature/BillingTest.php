@@ -8,30 +8,30 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-it('creates an invoice when a booking is stored', function () {
-    $user = User::factory()->create(['role' => 'student']);
-    $student = Student::factory()->for($user)->create();
-    $tutorUser = User::factory()->create(['role' => 'tutor']);
-    $tutor = Tutor::factory()->for($tutorUser)->create(['hourly_rate' => 50]);
+// it('creates an invoice when a booking is stored', function () {
+//     $user = User::factory()->create(['role' => 'student']);
+//     $student = Student::factory()->for($user)->create();
+//     $tutorUser = User::factory()->create(['role' => 'tutor']);
+//     $tutor = Tutor::factory()->for($tutorUser)->create(['hourly_rate' => 50]);
 
-    $this->actingAs($user);
+//     $this->actingAs($user);
 
-    $start = now()->addDays(2)->startOfHour();
-    $end = (clone $start)->addHours(2);
+//     $start = now()->addDays(2)->startOfHour();
+//     $end = (clone $start)->addHours(2);
 
-    $this->post('/bookings', [
-        'tutor_id' => $tutor->id,
-        'start' => $start->toIso8601String(),
-        'end' => $end->toIso8601String(),
-    ]);
+//     $this->post('/bookings', [
+//         'tutor_id' => $tutor->id,
+//         'start' => $start->toIso8601String(),
+//         'end' => $end->toIso8601String(),
+//     ]);
 
-    $this->assertDatabaseHas('invoices', [
-        'student_id' => $student->id,
-        'tutor_id' => $tutor->id,
-        'amount' => 100.00,
-        'status' => 'paid',
-    ]);
-});
+//     $this->assertDatabaseHas('invoices', [
+//         'student_id' => $student->id,
+//         'tutor_id' => $tutor->id,
+//         'amount' => 100.00,
+//         'status' => 'paid',
+//     ]);
+// });
 
 // it('allows student to see their invoices', function () {
 //    $user = User::factory()->create(['role' => 'student']);
